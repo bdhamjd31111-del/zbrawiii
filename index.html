@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zabrawi Egypt | زبراوي مصر</title>
+    <style>
+        :root {
+            --main-red: #ff0000;
+            --dark-bg: #0f0f0f;
+            --card-bg: #1e1e1e;
+        }
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* شاشة الترحيب */
+        #welcome-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease;
+            text-align: center;
+            padding: 20px;
+        }
+        #welcome-screen h1 {
+            font-size: 2rem;
+            color: var(--main-red);
+            text-shadow: 0 0 10px rgba(255,0,0,0.5);
+        }
+
+        /* واجهة الموقع الأساسية */
+        header {
+            padding: 20px;
+            background-color: var(--dark-bg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #333;
+            text-align: center;
+        }
+        .search-box {
+            width: 80%;
+            max-width: 600px;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 1px solid #333;
+            background-color: #121212;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        .search-box:focus { border-color: var(--main-red); }
+
+        /* شبكة الفيديوهات */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .video-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .video-card:hover { transform: scale(1.03); }
+        .video-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .video-info { padding: 15px; text-align: right; }
+        .video-title { font-weight: bold; margin-bottom: 5px; font-size: 1.1rem; }
+        
+        iframe, video { width: 100%; aspect-ratio: 16/9; border: none; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="welcome-screen">
+        <h1>Welcome to Zabrawi Egypt website<br>مرحباً بكم في موقع زبراوي مصر</h1>
+    </div>
+
+    <header>
+        <input type="text" id="searchInput" class="search-box" placeholder="ابحث عن فيديو..." onkeyup="searchVideos()">
+    </header>
+
+    <main>
+        <div class="video-grid" id="videoGrid">
+            <div class="video-card" data-title="فيديو تعليمي 1">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                <div class="video-info">
+                    <div class="video-title">فيديو تعليمي 1</div>
+                </div>
+            </div>
+
+            <div class="video-card" data-title="مراجعة تقنية">
+                <iframe src="https://www.youtube.com/embed/EngW7tLk6R8" allowfullscreen></iframe>
+                <div class="video-info">
+                    <div class="video-title">مراجعة تقنية</div>
+                </div>
+            </div>
+
+            <div class="video-card" data-title="فيديو زبراوي الخاص">
+                <video controls>
+                    <source src="video1.mp4" type="video/mp4">
+                    متصفحك لا يدعم الفيديو
+                </video>
+                <div class="video-info">
+                    <div class="video-title">فيديو زبراوي الخاص</div>
+                </div>
+            </div>
+            
+            </div>
+    </main>
+
+    <script>
+        // كود إخفاء شاشة الترحيب بعد 3 ثوانٍ
+        setTimeout(() => {
+            const screen = document.getElementById('welcome-screen');
+            screen.style.opacity = '0';
+            setTimeout(() => {
+                screen.classList.add('hidden');
+            }, 1000); // وقت التلاشي
+        }, 3000);
+
+        // كود البحث عن الفيديوهات
+        function searchVideos() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('video-card');
+
+            for (let i = 0; i < cards.length; i++) {
+                let title = cards[i].getAttribute('data-title').toLowerCase();
+                if (title.includes(input)) {
+                    cards[i].classList.remove('hidden');
+                } else {
+                    cards[i].classList.add('hidden');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
