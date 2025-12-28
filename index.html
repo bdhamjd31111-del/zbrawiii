@@ -3,155 +3,314 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zabrawi Egypt | زبراوي مصر</title>
+    <title>زبراوي مصر - Zbrawi Egypt</title>
     <style>
-        :root {
-            --main-red: #ff0000;
-            --dark-bg: #0f0f0f;
-            --card-bg: #1e1e1e;
-        }
-        body {
-            background-color: var(--dark-bg);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-
+        body { background-color: #0b0b0b; color: white; font-family: sans-serif; margin: 0; overflow-x: hidden; }
+        
         /* شاشة الترحيب */
         #welcome-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: black;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 1s ease;
-            text-align: center;
-            padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 9999;
+            transition: opacity 1s;
         }
-        #welcome-screen h1 {
-            font-size: 2rem;
-            color: var(--main-red);
-            text-shadow: 0 0 10px rgba(255,0,0,0.5);
-        }
+        #welcome-screen h1 { color: #ff0000; font-size: 2.5rem; margin-bottom: 5px; text-align: center; }
+        #welcome-screen p { color: #ff0000; font-size: 1.2rem; text-align: center; }
 
-        /* واجهة الموقع الأساسية */
-        header {
-            padding: 20px;
-            background-color: var(--dark-bg);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid #333;
-            text-align: center;
-        }
-        .search-box {
-            width: 80%;
-            max-width: 600px;
-            padding: 12px 20px;
-            border-radius: 25px;
-            border: 1px solid #333;
-            background-color: #121212;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-        }
-        .search-box:focus { border-color: var(--main-red); }
+        /* الهيدر والبحث */
+        .header { padding: 20px; text-align: center; background: #1a1a1a; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid #ff0000; }
+        .search-box { width: 90%; max-width: 600px; padding: 12px; border-radius: 25px; border: 2px solid #ff0000; background: #000; color: white; outline: none; text-align: center; }
 
-        /* شبكة الفيديوهات */
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            max-width: 1200px;
-            margin: auto;
-        }
-        .video-card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.3s;
-        }
-        .video-card:hover { transform: scale(1.03); }
-        .video-placeholder {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background-color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .video-info { padding: 15px; text-align: right; }
-        .video-title { font-weight: bold; margin-bottom: 5px; font-size: 1.1rem; }
-        
-        iframe, video { width: 100%; aspect-ratio: 16/9; border: none; }
+        /* قائمة الفيديوهات */
+        .video-list { display: flex; flex-direction: column; align-items: center; gap: 30px; padding: 20px; }
+        .video-card { width: 100%; max-width: 500px; background: #1a1a1a; border-radius: 25px; overflow: hidden; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        video { width: 100%; display: block; border-radius: 25px 25px 0 0; }
+        .video-info { padding: 15px; text-align: center; }
+        .video-info h3 { margin: 0; color: #ff0000; font-size: 18px; }
 
-        .hidden { display: none !important; }
+        .hidden { opacity: 0; pointer-events: none; }
     </style>
 </head>
 <body>
 
     <div id="welcome-screen">
-        <h1>Welcome to Zabrawi Egypt website<br>مرحباً بكم في موقع زبراوي مصر</h1>
+        <h1>مرحباً بك في زبراوي مصر</h1>
+        <p>Welcome to Zbrawi Egypt</p>
     </div>
 
-    <header>
-        <input type="text" id="searchInput" class="search-box" placeholder="ابحث عن فيديو..." onkeyup="searchVideos()">
-    </header>
+    <div class="header">
+        <input type="text" id="searchInput" class="search-box" placeholder="ابحث عن عنوان الفيديو..." onkeyup="searchVideo()">
+    </div>
 
-    <main>
-     <div style="text-align: center; margin-top: 20px;">
-    <img src="megooo.jpg" style="width: 200px; border-radius: 15px;">
-</div>
-   
-                    
+    <div class="video-list" id="videoGrid">
 
-            <div class="video-card" data-title="فيديو زبراوي الخاص">
-                <video controls>
-                    <source src="video1.mp4" type="video/mp4">
-                    متصفحك لا يدعم الفيديو
-                </video>
-                <div class="video-info">
-                    <div class="video-title">فيديو زبراوي الخاص</div>
-                </div>
-            </div>
-            
-            </div>
-    </main>
+        <div class="video-card">
+            <video controls preload="none"><source src="video1.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3>عنوان الفيديو رقم 1</h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video2.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3>عنوان الفيديو رقم 2</h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video3.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3>عنوان الفيديو رقم 3</h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video4.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3>عنوان الفيديو رقم 4</h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video5.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3>عنوان الفيديو رقم 5</h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video6.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3>عنوان الفيديو رقم 6</h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video7.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3>عنوان الفيديو رقم 7</h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video8.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3>عنوان الفيديو رقم 8</h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video9.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3>عنوان الفيديو رقم 9</h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video10.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3>عنوان الفيديو رقم 10</h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video11.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video12.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video13.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video14.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video15.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video16.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video17.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video18.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video19.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video20.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video21.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video22.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video23.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video24.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video25.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+      
+        </div>
+                <div class="video-card">
+            <video controls preload="none"><source src="video26.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video27.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video28.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video29.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video30.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video31.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video32.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video33.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video34.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video35.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video36.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video37.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video38.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video39.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video40.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video41.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video42.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video43.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video44.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video45.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video46.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video47.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video48.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video49.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+        <div class="video-card">
+            <video controls preload="none"><source src="video50.mp4" type="video/mp4"></video>
+            <div class="video-info"><h3></h3></div>
+        </div>
+
+    </div>
 
     <script>
-        // كود إخفاء شاشة الترحيب بعد 3 ثوانٍ
+        // إخفاء الترحيب
         setTimeout(() => {
-            const screen = document.getElementById('welcome-screen');
-            screen.style.opacity = '0';
-            setTimeout(() => {
-                screen.classList.add('hidden');
-            }, 1000); // وقت التلاشي
+            document.getElementById('welcome-screen').classList.add('hidden');
         }, 3000);
 
-        // كود البحث عن الفيديوهات
-        function searchVideos() {
+        // وظيفة البحث
+        function searchVideo() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('video-card');
-
             for (let i = 0; i < cards.length; i++) {
-                let title = cards[i].getAttribute('data-title').toLowerCase();
-                if (title.includes(input)) {
-                    cards[i].classList.remove('hidden');
-                } else {
-                    cards[i].classList.add('hidden');
-                }
+                let title = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+                cards[i].style.display = title.includes(input) ? "block" : "none";
             }
         }
     </script>
 </body>
 </html>
-
-
-
-
